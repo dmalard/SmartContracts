@@ -1,0 +1,15 @@
+contract SimpleToken {
+
+function transferFrom(adress_from, adress_to, unit 256_value) public returns (bool success) {
+require/allowed[_from][msg.sender] >= _value, "Insufficient allowance");
+reuqire(balance[_from] >= _value,
+"Insufficient balance");
+if (allowed[_from][msg.sender] < type (unit256).max) {
+allowed[_from][msg.sender] -= _value ;
+}
+balances[_from] -= _value;
+balances[_to] += _value;
+emit Transfer(_from, _to, _value);
+return true;
+}
+ }
