@@ -9,3 +9,98 @@ The company can pay the total taxes to the tax institution.
 Employees can check their net salary. 
 
 
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.9;
+
+contract Payroll {
+    address public company;
+    address public taxInstitution;
+    uint256 public totalSalaryPayments;
+    
+    constructor(address _company, address _taxInstitution) {
+        company = _company;
+        taxInstitution = _taxInstitution;
+    }
+
+    modifier onlyCompany() {
+        require(msg.sender == company, "Only the company can call this function");
+        _;
+    }
+
+    modifier onlyTaxInstitution() {
+        require(msg.sender == taxInstitution, "Only the tax institution can call this function");
+        _;
+    }
+
+    function setCompanyAddress(address _company) external onlyCompany {
+        company = _company;
+    }
+
+    function setTaxInstitutionAddress(address _taxInstitution) external onlyCompany {
+        taxInstitution = _taxInstitution;
+    }
+
+    struct Employee {
+        uint256 salary;
+        uint256 netSalary;
+        uint256 taxRate; // 7% or 10%
+        bool paid;
+    }
+
+    mapping(address => Employee) public employees;
+
+    event SalaryPaid(address indexed employee, uint256 salary, uint256 tax, uint256 netSalary);
+
+    function addEmployee(address employeeAddress, uint256 salary) external onlyCompany {
+        require(employees[employeeAddress].salary == 0, "Employee already exists");
+
+        uint256 taxRate;
+        if (salary < 1000) {
+            taxRate = 7;
+        } else {
+            taxRate = 10;
+        }
+
+        employees[employeeAddress] = Employee(salary, salary, taxRate, false);
+    }
+
+    function calculateTaxes(address employeeAddress) external view onlyCompany returns (uint256) {
+        require(employees[employeeAddress].salary > 0, "Employee does not exist");
+
+        uint256 salary = employees[employeeAddress].salary;
+        uint256 taxRate = employees[employeeAddress].taxRate;
+        return (salary * taxRate) / 100;
+    }
+
+    function deductTaxes(address employeeAddress) external onlyCompany {
+        require(employees[employeeAddress].salary > 0, "Employee does not exist");
+
+        uint256 salary = employees[employeeAddress].salary;
+        uint256 taxRate = employees[employeeAddress].taxRate;
+        uint256 tax = (salary * taxRate) / 100;
+        employees[employeeAddress].netSalary = salary - tax;
+        employees[employeeAddress].paid = true;
+
+        totalSalaryPayments += employees[employeeAddress].netSalary;
+
+        emit SalaryPaid(employeeAddress, salary, tax, employees[employeeAddress].netSalary);
+    }
+
+    function payTaxesToInstitution() external onlyCompany {
+        require(totalSalaryPayments > 0, "No taxes to pay");
+        require(address(this).balance >= totalSalaryPayments, "Insufficient contract balance");
+
+        totalSalaryPayments = 0;
+        taxInstitution.transfer(totalSalaryPayments);
+    }
+
+    function getEmployeeNetSalary(address employeeAddress) external view returns (uint256) {
+        require(employees[employeeAddress].salary > 0, "Employee does not exist");
+        return employees[employeeAddress].netSalary;
+    }
+
+    receive() external payable {}
+}
+
+
+
