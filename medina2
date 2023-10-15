@@ -1,0 +1,11 @@
+A company can add employees with their respective salaries and set their tax rates based on salary.
+
+The company can calculate and deduct taxes from an employee's salary.
+
+The contract keeps track of the total salary payments for tax purposes.
+
+The company can pay the total taxes to the tax institution.
+
+Employees can check their net salary. 
+
+
