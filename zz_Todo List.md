@@ -9,3 +9,10 @@ Make up a topic proposal meeting
 Questions for Mr Goldberg per Email : 
 1) How to get a lot free ETH or how to use less for testing? Local tests?
 2) Code schnipsel 
+
+
+3 Buttons, sending money to contract
+contract transfer the money based on rate
+Time stamp
+number of emloyees
+Taxrate
