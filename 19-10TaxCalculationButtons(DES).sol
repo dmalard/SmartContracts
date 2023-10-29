@@ -56,34 +56,24 @@ contract Payroll {
         );
 
         uint256 taxRate;
+        uint256 tax;
+        uint256 netSalary;
 
         if (employees[employeeAddress].isMarried) {
-            if (salary <= 14800) {
+            if (salary <= 28800) {
                 taxRate = 0;
-            } else if (salary <= 35) {
-                taxRate = 2;
-            } else if (salary <= 42200) {
-                taxRate = 3;
-            } else if (salary <= 56200) {
-                taxRate = 4;
-            } else if (salary <= 73900) {
+            } else if (salary <= 51800) {
+                taxRate = 1;
+            } else if (salary <= 105400) {
                 taxRate = 5;
-            } else if (salary <= 79600) {
-                taxRate = 7;
-            } else if (salary <= 105500) {
-                taxRate = 8;
-            } else if (salary <= 137200) {
-                taxRate = 10;
-            } else if (salary <= 179400) {
-                taxRate = 12;
-            } else if (salary <= 769600) {
-                taxRate = 14;
+            } else if (salary <= 912600) {
+                taxRate = 13;
             } else {
-                taxRate = 16;
+                taxRate = 12;
             }
 
-            uint256 tax = (salary * taxRate) / 100;
-            uint256 netSalary = salary - tax;
+            tax = (salary * taxRate) / 100;
+            netSalary = salary - tax;
             employees[employeeAddress] = Employee(
                 salary,
                 netSalary,
@@ -115,8 +105,8 @@ contract Payroll {
             } else {
                 taxRate = 15;
             }
-            uint256 tax = (salary * taxRate) / 100;
-            uint256 netSalary = salary - tax;
+            tax = (salary * taxRate) / 100;
+            netSalary = salary - tax;
             employees[employeeAddress] = Employee(
                 salary,
                 netSalary,
