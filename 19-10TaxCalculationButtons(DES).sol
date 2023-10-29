@@ -58,7 +58,9 @@ contract Payroll {
         uint256 taxRate;
 
         if (employees[employeeAddress].isMarried) {
-            if (salary <= 35) {
+            if (salary <= 14800) {
+                taxRate = 0;
+            } else if (salary <= 35) {
                 taxRate = 2;
             } else if (salary <= 42200) {
                 taxRate = 3;
@@ -90,10 +92,9 @@ contract Payroll {
                 true
             );
         } else {
-            if (salary <= 28800){
-                taxR
-            }
-            if (salary <= 32200) {
+            if (salary <= 28800) {
+                taxRate = 0;
+            } else if (salary <= 32200) {
                 taxRate = 1;
             } else if (salary <= 42200) {
                 taxRate = 2;
