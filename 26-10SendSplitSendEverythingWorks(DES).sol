@@ -67,7 +67,7 @@ contract Payroll {
 
         uint256 taxRate = calculateTaxtBasedOnTaxRate();
 
-        uint256 tax = (salary * taxRate) / 100;
+        uint256 tax = calculateTaxBasedOnTaxRate(salary, taxRate);
         uint256 netSalary = salary - tax;
 
         employees[employeeAddress] = Employee(
@@ -88,7 +88,7 @@ contract Payroll {
 
         uint256 salary = employees[employeeAddress].salary;
         uint256 taxRate = employees[employeeAddress].taxRate;
-        return (salary * taxRate) / 100;
+        return calculateTaxBasedOnTaxRate(salary, taxRate);
     }
 
     function deductTaxesAndPay(address employeeAddress) external onlyCompany {
@@ -100,7 +100,7 @@ contract Payroll {
 
         uint256 salary = employees[employeeAddress].salary;
         uint256 taxRate = employees[employeeAddress].taxRate;
-        uint256 tax = (salary * taxRate) / 100;
+        uint256 tax = calculateTaxBasedOnTaxRate(salary, taxRate);
         uint256 netSalary = salary - tax;
 
         employees[employeeAddress].netSalary = netSalary;
@@ -185,6 +185,15 @@ receive() exists?  fallback()
         return address(this).balance;
     }
 
+    function calculateTaxBasedOnTaxRate(
+        uint256 salary,
+        uint256 taxRate
+    ) private pure returns (uint256) {
+        uint256 tax = (salary * taxRate) / 100;
+        uint256 netSalary = salary - tax;
+        return netSalary;
+    }
+
     function sendViaTransfer(
         address payable _adrEMP,
         address payable _adrTax
@@ -193,7 +202,7 @@ receive() exists?  fallback()
         uint256 salary = msg.value;
         uint256 taxRate = calculateTaxtBasedOnTaxRate();
 
-        uint256 tax = (salary * taxRate) / 100;
+        uint256 tax = calculateTaxBasedOnTaxRate(salary, taxRate);
         uint256 netSalary = salary - tax;
 
         _adrEMP.transfer(netSalary);
