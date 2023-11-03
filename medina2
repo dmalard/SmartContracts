@@ -1,10 +1,11 @@
 A company can add employees with their respective salaries and set their tax rates based on salary.
 
-The company can calculate and deduct taxes from an employee's salary.
+The company can calculate and deduct taxes from an employee's salary. After tax calculations, from the net salary we have to make sure the smart contract 
+makes other deductions, such as insurance payment, other untaxed deductions?
 
 The contract keeps track of the total salary payments for tax purposes.
 
-The company can pay the total taxes to the tax institution.
+The company can pay the total taxes to the tax institution. 
 
 Employees can check their net salary. 
 
