@@ -35,6 +35,7 @@ contract Payroll {
         uint256 taxRate; // 7% or 10%
         bool paid;
         bool isMarried;
+        uint256 partnerNetSalary;
     }
 
     mapping(address => Employee) public employees;
@@ -46,9 +47,18 @@ contract Payroll {
         uint256 netSalary
     );
 
+    function addPartnerSalary(address employeeAddress, uint256 salary) private {
+        require(
+            employees[employeeAddress].netSalary == 0,
+            "Employee already exists"
+        );
+        employees[employeeAddress].netSalary = salary;
+    }
+
     function addEmployee(
         address employeeAddress,
-        uint256 salary
+        uint256 salary,
+        uint256 partnerSalary
     ) external onlyCompany {
         require(
             employees[employeeAddress].salary == 0,
@@ -59,27 +69,31 @@ contract Payroll {
         uint256 tax;
         uint256 netSalary;
 
+        addPartnerSalary(employeeAddress, partnerSalary);
+
         if (employees[employeeAddress].isMarried) {
-            if (salary <= 28800) {
+            uint familySalary = (salary + partnerSalary);
+            if (familySalary <= 28800) {
                 taxRate = 0;
-            } else if (salary <= 51800) {
+            } else if (familySalary <= 51800) {
                 taxRate = 1;
-            } else if (salary <= 105400) {
+            } else if (familySalary <= 105400) {
                 taxRate = 5;
-            } else if (salary <= 912600) {
+            } else if (familySalary <= 912600) {
                 taxRate = 13;
             } else {
                 taxRate = 12;
             }
 
-            tax = (salary * taxRate) / 100;
+            tax = (familySalary * taxRate) / 100;
             netSalary = salary - tax;
             employees[employeeAddress] = Employee(
                 salary,
                 netSalary,
                 taxRate,
                 false,
-                true
+                true,
+                partnerSalary
             );
         } else {
             if (salary <= 28800) {
@@ -112,7 +126,8 @@ contract Payroll {
                 netSalary,
                 taxRate,
                 false,
-                false
+                false,
+                partnerSalary
             );
         }
     }
