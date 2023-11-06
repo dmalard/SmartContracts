@@ -36,6 +36,7 @@ contract Payroll {
         bool paid;
         bool isMarried;
         uint256 partnerNetSalary;
+        uint256 socialContributions;
     }
 
     mapping(address => Employee) public employees;
@@ -68,6 +69,7 @@ contract Payroll {
         uint256 taxRate;
         uint256 tax;
         uint256 netSalary;
+        uint256 socialContributions;
 
         addPartnerSalary(employeeAddress, partnerSalary);
 
@@ -87,13 +89,17 @@ contract Payroll {
 
             tax = (familySalary * taxRate) / 100;
             netSalary = salary - tax;
+            employees[employeeAddress].socialContributions =
+                (familySalary * 155) /
+                1000;
             employees[employeeAddress] = Employee(
                 salary,
                 netSalary,
                 taxRate,
                 false,
                 true,
-                partnerSalary
+                partnerSalary,
+                socialContributions
             );
         } else {
             if (salary <= 28800) {
@@ -121,13 +127,17 @@ contract Payroll {
             }
             tax = (salary * taxRate) / 100;
             netSalary = salary - tax;
+            employees[employeeAddress].socialContributions =
+                (netSalary * 155) /
+                1000;
             employees[employeeAddress] = Employee(
                 salary,
                 netSalary,
                 taxRate,
                 false,
                 false,
-                partnerSalary
+                partnerSalary,
+                socialContributions
             );
         }
     }
