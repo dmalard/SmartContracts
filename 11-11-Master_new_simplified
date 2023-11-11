@@ -114,6 +114,21 @@ contract Payroll {
         delete employees[employeeAddress];
     }
 
+    // Change company address and with it the owner of the contract
+    function setCompanyAddress(address _company) external onlyCompany {
+        company = _company;
+    }
+
+    // Change Tax Institution address
+    function setTaxInstitutionAddress(address payable _taxInstitution) external onlyCompany {
+        taxInstitution = _taxInstitution;
+    }
+
+    // Change Tax Institution address
+    function setSocialInstitutionAddress(address payable _socialInstitution) external onlyCompany {
+        socialInstitution = _socialInstitution;
+    }
+
     receive() external payable {}
     fallback() external payable {}
 }
