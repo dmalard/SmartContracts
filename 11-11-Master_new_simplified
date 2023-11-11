@@ -8,7 +8,7 @@ contract Payroll {
 
     struct Employee {
         uint256 salary;
-        uint256 taxRate; // Percentage based tax rate
+        uint8 taxRate; // Percentage based tax rate
         bool isMarried;
         uint256 partnerSalary;
     }
@@ -46,12 +46,11 @@ contract Payroll {
         bool isMarried
     ) external onlyCompany {
         require(employees[employeeAddress].salary == 0, "Employee already exists");
-
-        uint256 taxRate = _calculateTaxRate(salary, partnerSalary, isMarried);
+        uint8 taxRate = _calculateTaxRate(salary, partnerSalary, isMarried);
         employees[employeeAddress] = Employee(salary, taxRate, isMarried, partnerSalary);
     }
 
-    function _calculateTaxRate(uint256 salary, uint256 partnerSalary, bool isMarried) internal pure returns (uint256) {
+    function _calculateTaxRate(uint256 salary, uint256 partnerSalary, bool isMarried) internal pure returns (uint8) {
         uint256 income = isMarried ? salary + partnerSalary : salary;
         if (isMarried) {
             if (income <= 28800) {
@@ -91,6 +90,7 @@ contract Payroll {
             }
         }
     }
+    // Set the tax rate value to uint8 since the tax rate will probabily not exceed 255.
 
     function sendViaTransfer(address payable _employeeAddress) external onlyCompany {
         Employee memory emp = employees[_employeeAddress];
