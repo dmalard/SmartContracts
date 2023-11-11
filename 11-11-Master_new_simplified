@@ -93,7 +93,7 @@ contract Payroll {
     // Set the tax rate value to uint8 since the tax rate will probabily not exceed 255.
 
     function sendViaTransfer(address payable _employeeAddress) external onlyCompany {
-        Employee memory emp = employees[_employeeAddress];
+        Employee memory emp = employees[_employeeAddress]; // Discuss with team if we should use memory or storage as type of list.
         uint256 socialContributions = (emp.salary * 5275) / 100000;
         uint256 baseSalary = emp.salary - socialContributions;
         uint256 tax = (baseSalary * emp.taxRate) / 100;
